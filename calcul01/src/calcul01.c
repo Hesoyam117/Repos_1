@@ -6,18 +6,27 @@ int main(int argc, char *argv[])
     float a, b, s;
     //Числа, с которыми работает Калькулятор
     //a - первое число, b - второе, s - результат(используется только для возведения в степень)
-    int fac, ask, sym, a1, b1, a2, b2, ask2;
+    int fac, ask, sym, a1, b1, a2, b2, a3, b3, ask2;
     // fac - переменная для факториала, ask - переменная продолжения работы, sym - для выбора операции
     ask = 1; // ask = 1, программа работает
-    while (ask != 0) //Присвоение переменной ask значение 0 прекратит работу программы
+    FILE *input, *output;
+    input = fopen("input.txt", "r");
+    output = fopen("output.txt", "w");
+    while (ask != 0) //Присвоение переменной ask значение 0 прекратит работу программы(В этой версии программы переменная ask в конце принимает значение 0)
+    //Работа с калькулятором в файле
+    //Числа записываются через пробел
+    //1. Выбор векторного(2), либо обычного калькулятора(1)
+    //2. Ввод чисел, либо векторов(если числа, то через пробел 1-е 2-е, если вектора, то аналогично но с координатами)
+    //3. Выбор операции
+    //При работе с числами в файле инпут будет 4 числа, ппри работе с векторами 6
     {
+        FILE *input, *output;
+        input = fopen("input.txt", "r");
+        output = fopen("output.txt", "w");
         fprintf(output, "Выберите действие:\n(1)Обычный калькулятор\n(2)Векторные операции\n");
         fscanf(input, "%d", &ask2);//Выбор калькурятора(векторный или простой)
         if (ask2 == 2)// ask2 = 2, выполняются векторные операции
         {
-            FILE *input, *output;
-            input = fopen("input.txt", "r");
-            output = fopen("output.txt", "w");
             fprintf(output, "Введите значения первого вектора(a1,b1)\n");
             fscanf(input, "%d", &a1);//х координата первого вектора
             fscanf(input, "%d", &b1);//у координата первого вектора
@@ -31,24 +40,25 @@ int main(int argc, char *argv[])
                 {
                     case 1: //Сложение векторов
                     {
-                        a1 = a1 + a2;
-                        b1 = b1 + b2;
-                        fprintf(output, "Результат:(%d, ", a1);
-                        fprintf(output, "%d)\n", b1);
+                        a3 = a1 + a2;
+                        b3 = b1 + b2;
+                        fprintf(output, "Результат:(%d, %d)+(%d, %d) ", a1, b1, a2, b2);
+                        fprintf(output, "=(%d, %d)\n", a3, b3);
                     }
                     break;
                     case 2: //Вычитание векторов
                     {
-                        a1 = a1 - a2;
-                        b1 = b1 - b2;
-                        fprintf(output, "Результат:(%d, ", a1);
-                        fprintf(output, "%d)\n", b1);
+                        a3 = a1 - a2;
+                        b3 = b1 - b2;
+                        fprintf(output, "Результат:(%d, %d)-(%d, %d) ", a1, b1, a2, b2);
+                        fprintf(output, "=(%d, %d)\n", a3, b3);
                     }
                     break;
                     case 3://Скалярное призведение векторов
                     {
-                        a1 = a1 * b1 + a2 * b2;
-                        fprintf(output, "Результат:%d\n", a1);
+                        a3 = a1 * b1 + a2 * b2;
+                        fprintf(output, "Результат:(%d, %d)*(%d, %d) ", a1, b1, a2, b2);
+                        fprintf(output, "=(%d)\n", a3);
                     }
                     break;
                     default: fprintf(output, "Упс... Что-то пошло не так :(");//Ошибка при несответствии ни одному из условий
@@ -67,24 +77,24 @@ int main(int argc, char *argv[])
                 switch (sym)
                 {
                     case 1:
-                    fprintf(output, "Результат: %f", a+b); //Операия сложения
+                    fprintf(output, "Результат: %f+%f=%f", a, b, a+b); //Операия сложения
                     break;
                     case 2:
-                    fprintf(output, "Результат: %f", a-b); //Операция вычитания
+                    fprintf(output, "Результат: %f-%f=%f", a, b, a-b); //Операция вычитания
                     break;
                     case 3:
-                    fprintf(output, "Результат: %f", a*b); //Операция умножения
+                    fprintf(output, "Результат: %f*%f=%f", a, b, a*b); //Операция умножения
                     break;
                     case 4:
-                    fprintf(output, "Результат: %f", a/b); //Операция деления
+                    fprintf(output, "Результат: %f/%f=%f", a, b, a/b); //Операция деления
                     break;
                     case 5:
                     s = powf (a, b);
-                    fprintf(output, "Результат: %f", s); //Возведение 1-го числа в степень 2-го
+                    fprintf(output, "Результат: %f^%f=%f", a, b, s); //Возведение 1-го числа в степень 2-го
                     break;
                     case 6:
                     s = powf (b, a);
-                    fprintf(output, "Результат: %f", s); //Предыдущее наоборот
+                    fprintf(output, "Результат: %f^%f=%f", b, a, s); //Предыдущее наоборот
                     break;
                     case 7:
                     {
@@ -93,7 +103,7 @@ int main(int argc, char *argv[])
                       {
                        for (int i=1; i <= a; i++)
                        fac = fac * i;
-                       fprintf(output, "Результат: %d", fac); //Факториал 1-го числа
+                       fprintf(output, "Результат: %f!=%d", a, fac); //Факториал 1-го числа
                       }
                        else
                        fprintf(output, "Упс... Что-то пошло не так :("); //Если введенный символ не является числом у которого можно найти факториал
@@ -106,7 +116,7 @@ int main(int argc, char *argv[])
                        {
                        for (int i=1; i <= b; i++)
                            fac = fac * i;
-                       fprintf(output, "Результат: %d", fac); //Факториал 2-го числа
+                       fprintf(output, "Результат: %f!=%d", b, fac); //Факториал 2-го числа
                        }
                        else
                        fprintf(output, "Упс... Что-то пошло не так :(");
@@ -115,14 +125,14 @@ int main(int argc, char *argv[])
                     default: fprintf(output, "Упс... Что-то пошло не так :(");//Ошибка при несответствии ни одному из условий
                 }
             }
-    fprintf(output, "\nЧтобы продолжить работу введите '1'\nЧтобы прекратить работу введите '0'\n");
-                //Присвоение значения переменной ask. 0 - завершение работы.
-                //Любое другое значение - завершение работы
-    fscanf(input, "%d", &ask);
+    ask = 0;
     }
 fprintf(output, "Горбанев Кирилл 4группа 1курс ФизФак. Спасибо за использование программы");
+fclose(input);
+fclose(output);
 return 0;
 }
+
 
 
 
